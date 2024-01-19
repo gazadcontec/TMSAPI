@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.75" name="TVMS_data">
+  <DataContextMoniker Name="/TVMS_dataDataContext" />
+  <nestedChildShapes>
+    <classShape Id="b894ccdf-518d-4a1e-b4fb-27bfcd069714" absoluteBounds="2.5, 1.75, 2, 3.1170068359375">
+      <DataClassMoniker Name="/TVMS_dataDataContext/vw_User_n_FTP_det" />
+      <nestedChildShapes>
+        <elementListCompartment Id="39a623ad-6e37-4143-8717-95779ee84c10" absoluteBounds="2.515, 2.21, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="b26fadc3-dbd0-4c74-86d8-c7427b332f37" absoluteBounds="4.125, 0.875, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/TVMS_dataDataContext/tblDeviceDetail" />
+      <nestedChildShapes>
+        <elementListCompartment Id="80847c6a-fa08-4082-9e76-2b92e8cc3f30" absoluteBounds="4.14, 1.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="362b3926-1ff0-4172-b8d7-ce4902b3e6f5" absoluteBounds="5, 3.25, 2, 5.2323225911458326">
+      <DataClassMoniker Name="/TVMS_dataDataContext/tblVoilation" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6b7f6aff-7183-4b22-9a83-29aaf9f2f9b3" absoluteBounds="5.015, 3.71, 1.9700000000000002, 4.672322591145833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f73ff6b6-1448-4101-ac30-938fe4fbe5c3" absoluteBounds="0.5, 0.625, 2, 4.0785139973958326">
+      <DataClassMoniker Name="/TVMS_dataDataContext/vw_SearchViolation" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5c156807-bc1f-47b7-b3fe-d950528e8118" absoluteBounds="0.51500000000000012, 1.085, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="825477eb-2298-4506-938f-41646599978b" absoluteBounds="2, 5.25, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/TVMS_dataDataContext/tblUserMaster" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2071ebd2-5250-4f07-b7be-aafcf5965ef5" absoluteBounds="2.015, 5.71, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

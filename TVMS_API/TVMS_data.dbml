@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TVMS" Class="TVMS_dataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=oyords.ckrkdy50shek.eu-west-1.rds.amazonaws.com;Initial Catalog=TVMS;User ID=oyouser" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="TVMSCon" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.vw_User_n_FTP_det" Member="vw_User_n_FTP_dets">
+    <Type Name="vw_User_n_FTP_det">
+      <Column Name="UserId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="LoginId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserType" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FtpURL" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="FtpPort" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FtpUsername" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FtpPassword" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FtpCreationDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblDeviceDetails" Member="tblDeviceDetails">
+    <Type Name="tblDeviceDetail">
+      <Column Name="DeviceId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="DeviceIMEI" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblVoilations" Member="tblVoilations">
+    <Type Name="tblVoilation">
+      <Column Name="UserId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="VideoFileName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="PicFileName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="LocationName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="DeviceId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="IsProcessed" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="ProcessedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="OffenceId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="VehicleNumber" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="IsNotified" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="NotifiedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NotifiedBy" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="NotifiedImage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsEnforced" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="EnforcedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="EnforcedImage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="PenaltyPaid" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="PenaltyPaidOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PenaltyTxnNo" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="TicketNo" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="VideoDateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.vw_SearchViolations" Member="vw_SearchViolations">
+    <Type Name="vw_SearchViolation">
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="LoginId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="VideoFileName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="PicFileName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="LocationName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="DeviceIMEI" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsProcessed" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="ProcessedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="VehicleNumber" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="TicketNo" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="VideoDateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="OffenceName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Penalty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblUserMaster" Member="tblUserMasters">
+    <Type Name="tblUserMaster">
+      <Column Name="UserId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="LoginId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserType" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FtpId" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>
