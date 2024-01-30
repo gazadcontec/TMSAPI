@@ -111,7 +111,7 @@ namespace TVMS_API.Controllers
         public string OffenceDetails { get; set; }
         public string Penalty { get; set; }
         public string TicketNo { get; set; }
-        public string IsNotified { get;set;}
+        public string IsNotified { get; set; }
 
     }
 
@@ -187,7 +187,7 @@ namespace TVMS_API.Controllers
     }
 
     public class Clientlogin_Register
-    {        
+    {
         public string LoginId { get; set; }
         public string Password { get; set; }
         public string fname { get; set; }
@@ -259,18 +259,18 @@ namespace TVMS_API.Controllers
 
     }
 
-  
 
-   
 
-   
+
+
+
 
 
     /************ Tolling *****************/
 
     public class tolling_det
     {
-        public string UserId { get; set; }        
+        public string UserId { get; set; }
         public string picturename { get; set; }
         public string locationname { get; set; }
         public string longitude { get; set; }
@@ -279,12 +279,36 @@ namespace TVMS_API.Controllers
         public DateTime tolling_datetime { get; set; }
     }
 
+    //Added by Aditya Narayan Singh for insert_voilation_details_App controller on 29th Jan 2024
+    public class violation_det_App
+    {
+        public string UserId { get; set; }
+        public string videoFilename { get; set; }
+        public string picturesFilenames { get; set; }
+        public string locationname { get; set; }
+        public string longitude { get; set; }
+        public string latitude { get; set; }
+        public string deviceIMEI { get; set; }
+        public DateTime vdo_datetime { get; set; }
+        public string OffenceId { get; set; }
+        public string VehicleNumber { get; set; }
+        public string TicketNumber { get; set; }
+        public string TotalPenalty { get; set; }
+        public string notifiedby { get; set; }
+        public string PrintedTicketNo { get; set; }
+        public string PaymentRefNo { get; set; }
+        public string NotifiedLocation { get; set; }
+        public string PenalityPoints { get; set; }
+
+    }
+    //changes end here
+
     public class ValuesController : ApiController
     {
         // GET api/values
         public IEnumerable<string> Get()
         {
-            
+
             return new string[] { "value1", "value2" };
         }
         TVMS_dataDataContext db = new TVMS_dataDataContext();
@@ -295,12 +319,12 @@ namespace TVMS_API.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
         }
 
@@ -309,7 +333,7 @@ namespace TVMS_API.Controllers
         {
         }
 
-     //   [Authorize]
+        //   [Authorize]
         [System.Web.Http.HttpGet]
         public JObject getLogin(string u, string p, string deviceIMEI)
         {
@@ -325,7 +349,7 @@ namespace TVMS_API.Controllers
             DataTable table = new DataTable();
 
             {
-               // using (SqlCommand cmd = new SqlCommand("select * FROM vw_User_n_FTP_det where LoginId='" + u + "' and password='" + p + "'", cn1))
+                // using (SqlCommand cmd = new SqlCommand("select * FROM vw_User_n_FTP_det where LoginId='" + u + "' and password='" + p + "'", cn1))
 
                 using (SqlCommand cmd = new SqlCommand("select * FROM vw_User_n_FTP_det where LoginId='" + u + "'", cn1))
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
@@ -339,7 +363,7 @@ namespace TVMS_API.Controllers
             if (table.Rows.Count > 0)
                 password = AgentProfileController.DecryptString(table.Rows[0]["Password"].ToString());
 
-            if (table.Rows.Count > 0 && p == password)         
+            if (table.Rows.Count > 0 && p == password)
             {
                 /****************************************/
 
@@ -353,7 +377,7 @@ namespace TVMS_API.Controllers
                 cn1.Close();
                 /***************************************/
 
-               // if (table.Rows[0]["IsLogin"].ToString() == "1" && table.Rows[0]["CurrentDevice"].ToString() != deviceIMEI)
+                // if (table.Rows[0]["IsLogin"].ToString() == "1" && table.Rows[0]["CurrentDevice"].ToString() != deviceIMEI)
                 if (table.Rows[0]["CurrentDevice"].ToString() != deviceIMEI)
                     return JObject.Parse(@"{""LoginDetails"" :{status:""3""}}");
 
@@ -409,8 +433,8 @@ namespace TVMS_API.Controllers
                 }
 
                 SqlCommand cmd = new SqlCommand(qry, cn1);
-                 cmd.Parameters.AddWithValue("@u", u);
-               
+                cmd.Parameters.AddWithValue("@u", u);
+
 
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
@@ -418,7 +442,7 @@ namespace TVMS_API.Controllers
                 }
             }
 
-          
+
 
             string a = "";
             string main_ret = "";
@@ -468,7 +492,7 @@ namespace TVMS_API.Controllers
 
 
         [System.Web.Http.HttpPost]
-        public JObject ChangePassword(string u, string op, string np,string Agent_client)
+        public JObject ChangePassword(string u, string op, string np, string Agent_client)
         {
             u = u.Replace("'", "''");
             op = op.Replace("'", "''");
@@ -484,12 +508,12 @@ namespace TVMS_API.Controllers
                 if (Agent_client == "A")
                 {
 
-                   // qry = "select * FROM vw_User_n_FTP_det where LoginId='" + u + "' and password='" + op + "'";
+                    // qry = "select * FROM vw_User_n_FTP_det where LoginId='" + u + "' and password='" + op + "'";
                     qry = "select * FROM vw_User_n_FTP_det where LoginId='" + u + "'";
                 }
                 else
                 {
-                   // qry = "select * FROM tblClientUserMaster where LoginId='" + u + "' and password='" + op + "'";
+                    // qry = "select * FROM tblClientUserMaster where LoginId='" + u + "' and password='" + op + "'";
                     qry = "select * FROM tblClientUserMaster where LoginId='" + u + "'";
                 }
 
@@ -501,12 +525,12 @@ namespace TVMS_API.Controllers
                     adapter.Fill(table);
                 }
             }
-            string old_password="";
+            string old_password = "";
 
             //if (Agent_client != "A")
             //    old_password = "";
             //else
-                old_password = op;
+            old_password = op;
 
             if (table.Rows.Count > 0)
             {
@@ -515,7 +539,7 @@ namespace TVMS_API.Controllers
             }
             string a = "";
             string main_ret = "";
-            if (table.Rows.Count > 0 && op==old_password)
+            if (table.Rows.Count > 0 && op == old_password)
             {
                 SqlCommand cmd = new SqlCommand("ADM_Change_Password", cn1);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -553,7 +577,7 @@ namespace TVMS_API.Controllers
                 main_ret = main_ret + "{\"Result\":\"Wrong LoginId or Password\"}";
             }
 
-           
+
 
             return JObject.Parse(main_ret);
         }
@@ -679,14 +703,14 @@ namespace TVMS_API.Controllers
             }
             string a = "";
             string main_ret = "";
-            if (table.Rows.Count > 0 && Reg_FP=="F")
+            if (table.Rows.Count > 0 && Reg_FP == "F")
             {
                 string ph_no = "";
                 ph_no = table.Rows[0]["PhoneNumber"].ToString();
                 int otp = GenerateRandomNo();
                 WebClient client = new WebClient();
 
-              //  string URI1 = "https://zm4j6.api.infobip.com/sms/1/text/query?username=Brentwood&password=Bmg_123@&to=+234" + ph_no + "&text=" + otp;
+                //  string URI1 = "https://zm4j6.api.infobip.com/sms/1/text/query?username=Brentwood&password=Bmg_123@&to=+234" + ph_no + "&text=" + otp;
                 //var res = client.UploadString(URI1, "");
 
                 if (SMS_CALL == "C")
@@ -704,7 +728,7 @@ namespace TVMS_API.Controllers
                 main_ret = main_ret + "{\"Result\":\"" + otp + "\"}";
 
 
-             
+
 
                 return JObject.Parse(main_ret);
             }
@@ -715,14 +739,14 @@ namespace TVMS_API.Controllers
                 ph_no = username;
                 int otp = GenerateRandomNo();
 
-               // otp = 1211;   // hardcode testing purpose
+                // otp = 1211;   // hardcode testing purpose
 
                 WebClient client = new WebClient();
-               // client.BaseAddress = "github.bmg.ng:2121";
+                // client.BaseAddress = "github.bmg.ng:2121";
 
 
-              //  string URI1 = "https://zm4j6.api.infobip.com/sms/1/text/query?username=Brentwood&password=Bmg_123@&to=+234" + ph_no.Substring(ph_no.Length - 10) + "&text=" + otp;
-              //  var res = client.UploadString(URI1, "");
+                //  string URI1 = "https://zm4j6.api.infobip.com/sms/1/text/query?username=Brentwood&password=Bmg_123@&to=+234" + ph_no.Substring(ph_no.Length - 10) + "&text=" + otp;
+                //  var res = client.UploadString(URI1, "");
 
                 if (SMS_CALL == "C")
                 {
@@ -876,7 +900,7 @@ namespace TVMS_API.Controllers
                 qry = "select * FROM vw_SearchViolations where VehicleNumber='" + Veh_No + "' and isnull(IsProcessed,0)=1 and isnull(IsEnforced,0)!=1";
 
 
-               // qry = "select LoginId,TicketNo,VehicleNumber,SUM(Penalty)as Penalty  FROM vw_SearchViolations where VehicleNumber='" + Veh_No + "' and isnull(IsProcessed,0)=1 and isnull(IsEnforced,0)!=1 group by TicketNo,VehicleNumber,LoginId order by TicketNo";
+                // qry = "select LoginId,TicketNo,VehicleNumber,SUM(Penalty)as Penalty  FROM vw_SearchViolations where VehicleNumber='" + Veh_No + "' and isnull(IsProcessed,0)=1 and isnull(IsEnforced,0)!=1 group by TicketNo,VehicleNumber,LoginId order by TicketNo";
                 qry = "SELECT LoginId,TicketNo,VehicleNumber, STUFF((SELECT ',' + s.OffenceName FROM vw_ClientSearch s WHERE s.TicketNo = t.TicketNo FOR XML PATH('')),1,1,'') AS OffenceName,SUM(Penalty)as Penalty FROM vw_ClientSearch AS t GROUP BY t.TicketNo,LoginId,VehicleNumber";
 
                 using (SqlCommand cmd = new SqlCommand(qry, cn1))
@@ -899,7 +923,7 @@ namespace TVMS_API.Controllers
             //dt.Columns.AddRange(new DataColumn[11] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),                        
             //                new DataColumn("deviceIMEI",typeof(string)), new DataColumn("vdo_datetime",typeof(string)), new DataColumn("daysLeft",typeof(int)), new DataColumn("IsNotified",typeof(int))});
 
-            dt.Columns.AddRange(new DataColumn[5] {new DataColumn("officerLoginId", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)), new DataColumn("OffenceDetails", typeof(string)), new DataColumn("Penalty", typeof(string))});
+            dt.Columns.AddRange(new DataColumn[5] { new DataColumn("officerLoginId", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)), new DataColumn("OffenceDetails", typeof(string)), new DataColumn("Penalty", typeof(string)) });
 
             if (table.Rows.Count > 0)
             {
@@ -929,9 +953,9 @@ namespace TVMS_API.Controllers
 
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                   // dt.Rows.Add(table.Rows[i]["LoginId"].ToString(), table.Rows[i]["FirstName"].ToString(), table.Rows[i]["LastName"].ToString(), table.Rows[i]["VehicleNumber"].ToString(), table.Rows[i]["TicketNo"].ToString(), table.Rows[i]["OffenceName"].ToString(), table.Rows[i]["Penalty"].ToString(), table.Rows[i]["DeviceIMEI"].ToString(), table.Rows[i]["videodatetime"].ToString(), table.Rows[i]["DaysLeft"].ToString(), table.Rows[i]["IsNotified"].ToString());
+                    // dt.Rows.Add(table.Rows[i]["LoginId"].ToString(), table.Rows[i]["FirstName"].ToString(), table.Rows[i]["LastName"].ToString(), table.Rows[i]["VehicleNumber"].ToString(), table.Rows[i]["TicketNo"].ToString(), table.Rows[i]["OffenceName"].ToString(), table.Rows[i]["Penalty"].ToString(), table.Rows[i]["DeviceIMEI"].ToString(), table.Rows[i]["videodatetime"].ToString(), table.Rows[i]["DaysLeft"].ToString(), table.Rows[i]["IsNotified"].ToString());
 
-                    dt.Rows.Add(table.Rows[i]["LoginId"].ToString(), table.Rows[i]["VehicleNumber"].ToString(), table.Rows[i]["TicketNo"].ToString(),table.Rows[i]["OffenceName"].ToString(), table.Rows[i]["Penalty"].ToString());
+                    dt.Rows.Add(table.Rows[i]["LoginId"].ToString(), table.Rows[i]["VehicleNumber"].ToString(), table.Rows[i]["TicketNo"].ToString(), table.Rows[i]["OffenceName"].ToString(), table.Rows[i]["Penalty"].ToString());
                 }
                 // StringBuilder x= new StringBuilder();
                 string x = Convert.ToString(JObject.Parse(@"{""SearchDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.Indented)) + "}"));
@@ -965,9 +989,9 @@ namespace TVMS_API.Controllers
             {
                 string qry = "";
 
-               // qry = "select * FROM vw_SearchViolations where VehicleNumber='" + Veh_No + "' and isnull(IsNotified,0)!=1 and isnull(IsEnforced,0)!=1";
+                // qry = "select * FROM vw_SearchViolations where VehicleNumber='" + Veh_No + "' and isnull(IsNotified,0)!=1 and isnull(IsEnforced,0)!=1";
                 qry = "select * FROM vw_SearchViolations where VehicleNumber='" + Veh_No + "' and isnull(IsProcessed,0)=1 and isnull(IsEnforced,0)!=1";
-               
+
 
                 //select STRING_AGG(OffenceName, ', ')  FROM vw_SearchViolations where VehicleNumber='DL998899' and isnull(IsProcessed,0)=1 and isnull(IsEnforced,0)!=1 group by TicketNo
 
@@ -989,7 +1013,7 @@ namespace TVMS_API.Controllers
 
 
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[11] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),                        
+            dt.Columns.AddRange(new DataColumn[11] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),
                             new DataColumn("deviceIMEI",typeof(string)), new DataColumn("vdo_datetime",typeof(string)), new DataColumn("daysLeft",typeof(int)), new DataColumn("IsNotified",typeof(int))});
 
 
@@ -1026,16 +1050,16 @@ namespace TVMS_API.Controllers
                 // StringBuilder x= new StringBuilder();
                 string x = Convert.ToString(JObject.Parse(@"{""SearchDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.Indented)) + "}"));
 
-               // return JObject.Parse(@"{""SearchDetails"" :" + Newtonsoft.Json.JsonConvert.SerializeObject(SearchViolationDetails) + "}");
+                // return JObject.Parse(@"{""SearchDetails"" :" + Newtonsoft.Json.JsonConvert.SerializeObject(SearchViolationDetails) + "}");
                 return JObject.Parse(@"{""SearchDetails"" :" + (JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.None)) + "}");
 
             }
             else
             {
-               // return JObject.Parse(@"{""SearchDetails"" :{status:""0""}}");
+                // return JObject.Parse(@"{""SearchDetails"" :{status:""0""}}");
 
                 return JObject.Parse(@"{""SearchDetails"" :" + (JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.None)) + "}");
-               
+
             }
         }
 
@@ -1050,7 +1074,7 @@ namespace TVMS_API.Controllers
             try
             {
                 SqlCommand cmd = new SqlCommand("ADM_INS_VoilationDetails", cn);
-                cmd.CommandType = CommandType.StoredProcedure;                
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@UserId", violationdet.UserId);
                 cmd.Parameters.AddWithValue("@deviceIMEI", violationdet.deviceIMEI);
                 cmd.Parameters.AddWithValue("@videoFilename", violationdet.videoFilename);
@@ -1060,7 +1084,7 @@ namespace TVMS_API.Controllers
                 cmd.Parameters.AddWithValue("@locationname", violationdet.locationname);
                 cmd.Parameters.AddWithValue("@vdo_datetime", violationdet.vdo_datetime);
                 cmd.Parameters.AddWithValue("@OffenceId", violationdet.OffenceId);
-                
+
 
                 SqlParameter output = new SqlParameter("@SuccessID", SqlDbType.Int);
                 output.Direction = ParameterDirection.Output;
@@ -1160,7 +1184,7 @@ namespace TVMS_API.Controllers
                 cmd.Parameters.AddWithValue("@NotifiedOn", Notified_violationdet.NotifiedOn);
                 cmd.Parameters.AddWithValue("@NotifiedBy", Notified_violationdet.NotifiedBy);
                 cmd.Parameters.AddWithValue("@NotifiedImage", Notified_violationdet.NotifiedImage);
-                
+
 
 
                 SqlParameter output = new SqlParameter("@SuccessID", SqlDbType.Int);
@@ -1498,7 +1522,7 @@ namespace TVMS_API.Controllers
                 string x = Convert.ToString(JObject.Parse(@"{""LoginDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.Indented)) + "}"));
 
                 // return JObject.Parse(@"{""SearchDetails"" :" + Newtonsoft.Json.JsonConvert.SerializeObject(SearchViolationDetails) + "}");
-               // return JObject.Parse(@"{""SearchDetails"" :" + (JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.None)) + "}");
+                // return JObject.Parse(@"{""SearchDetails"" :" + (JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.None)) + "}");
                 return table;
             }
             else
@@ -1529,7 +1553,7 @@ namespace TVMS_API.Controllers
                 string qryCondition = "";
 
 
-                if (VehNo_tikNo=="b" && chesis_No == "b")
+                if (VehNo_tikNo == "b" && chesis_No == "b")
                 {
                     qryCondition = "UserId='" + u + "'";
                 }
@@ -1537,7 +1561,7 @@ namespace TVMS_API.Controllers
                 {
                     qryCondition = "VehicleNumber='" + VehNo_tikNo + "' and UserId='" + u + "'";
                 }
-               
+
                 else
                 {
                     qryCondition = "VehicleNumber='" + VehNo_tikNo + "' and ChesisNo='" + chesis_No + "' and UserId='" + u + "'";
@@ -1577,13 +1601,13 @@ namespace TVMS_API.Controllers
                 {
                     adapter.Fill(table);
                 }
-                
-               
+
+
             }
 
 
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[28] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),                        
+            dt.Columns.AddRange(new DataColumn[28] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),
                             new DataColumn("deviceIMEI",typeof(string)), new DataColumn("vdo_datetime",typeof(string)), new DataColumn("daysLeft",typeof(int)), new DataColumn("IsNotified",typeof(int)), new DataColumn("IsPaid",typeof(int)), new DataColumn("PenaltyPaidOn",typeof(string)), new DataColumn("PeneltyTxnNo",typeof(string)),new DataColumn("OffenceId",typeof(string)),new DataColumn("VideoFileName",typeof(string)),new DataColumn("PicFileName",typeof(string)),new DataColumn("link",typeof(string)),new DataColumn("LocationName",typeof(string)),new DataColumn("Diff_Flag",typeof(string)),new DataColumn("VoilationStatus",typeof(string)),new DataColumn("PrintedTicketNo",typeof(string)),new DataColumn("ChallengedOn",typeof(string)),new DataColumn("ChallengedExpiry",typeof(string)),new DataColumn("IsEnforced",typeof(string)),new DataColumn("PenaltyPoints",typeof(string)),new DataColumn("ChallengeByMobNo",typeof(string)),new DataColumn("ChallengeByExpDiff",typeof(string))});
 
 
@@ -1614,7 +1638,7 @@ namespace TVMS_API.Controllers
                     PenaltyPaidOn = table.Rows[0]["PenaltyPaidOn"].ToString(),
                     PenaltyTxnNo = table.Rows[0]["PenaltyTxnNo"].ToString(),
                     PrintedTicketNo = table.Rows[0]["PrintedTicketNo"].ToString(),
-                    ChallangedExpiryDiff=table.Rows[0]["ChallengedExpiryDiff"].ToString()
+                    ChallangedExpiryDiff = table.Rows[0]["ChallengedExpiryDiff"].ToString()
 
                 };
 
@@ -1715,7 +1739,7 @@ namespace TVMS_API.Controllers
 
 
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[30] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),                        
+            dt.Columns.AddRange(new DataColumn[30] {new DataColumn("officerLoginId", typeof(string)),new DataColumn("officerFname", typeof(string)), new DataColumn("officerLname", typeof(string)), new DataColumn("vehicleNumber", typeof(string)), new DataColumn("TicketNo", typeof(string)),  new DataColumn("OffenceDetails", typeof(string)),  new DataColumn("Penalty", typeof(string)),
                             new DataColumn("deviceIMEI",typeof(string)), new DataColumn("vdo_datetime",typeof(string)), new DataColumn("daysLeft",typeof(int)), new DataColumn("IsNotified",typeof(int)), new DataColumn("IsPaid",typeof(int)), new DataColumn("PenaltyPaidOn",typeof(string)), new DataColumn("PeneltyTxnNo",typeof(string)),new DataColumn("OffenceId",typeof(string)),new DataColumn("VideoFileName",typeof(string)),new DataColumn("PicFileName",typeof(string)),new DataColumn("link",typeof(string)),new DataColumn("LocationName",typeof(string)),new DataColumn("Diff_Flag",typeof(string)),new DataColumn("VoilationStatus",typeof(string)),new DataColumn("PrintedTicketNo",typeof(string)),new DataColumn("ChallengedOn",typeof(string)),new DataColumn("ChallengedExpiry",typeof(string)),new DataColumn("IsEnforced",typeof(string)),new DataColumn("PenaltyPoints",typeof(string)),new DataColumn("ChallengeByMobNo",typeof(string)),new DataColumn("ChallengeByExpDiff",typeof(string)),new DataColumn("Status",typeof(string)),new DataColumn("TimeStatus",typeof(string))});
 
 
@@ -1748,7 +1772,7 @@ namespace TVMS_API.Controllers
                 //    PrintedTicketNo = table.Rows[0]["PrintedTicketNo"].ToString(),
                 //    ChallangedExpiryDiff = table.Rows[0]["ChallengedExpiryDiff"].ToString()
 
-               // };
+                // };
 
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
@@ -1783,14 +1807,14 @@ namespace TVMS_API.Controllers
             string a;
             string main_ret = "";
             SqlConnection cn = new SqlConnection(db.Connection.ConnectionString.ToString());
-            
+
             try
             {
                 SqlCommand cmd = new SqlCommand("ADM_INS_ClientUser", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Loginid", ClientLoginDet.LoginId);
                 cmd.Parameters.AddWithValue("@Password", AgentProfileController.EncryptString(ClientLoginDet.Password));
-              //  cmd.Parameters.AddWithValue("@Password",ClientLoginDet.Password);
+                //  cmd.Parameters.AddWithValue("@Password",ClientLoginDet.Password);
                 cmd.Parameters.AddWithValue("@FirstName", ClientLoginDet.fname);
                 cmd.Parameters.AddWithValue("@LastName", ClientLoginDet.lname);
                 cmd.Parameters.AddWithValue("@PhoneNumber", ClientLoginDet.Phone);
@@ -1806,7 +1830,7 @@ namespace TVMS_API.Controllers
 
                 UserId.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(UserId);
-                
+
                 /***************************** Email Verification **********************************/
 
                 //MailMessage mm = new MailMessage();
@@ -1822,7 +1846,7 @@ namespace TVMS_API.Controllers
                 //smcl.EnableSsl = true;
                 //smcl.Send(mm);
 
-               // mail(ClientLoginDet.LoginId);
+                // mail(ClientLoginDet.LoginId);
                 /***********************************************************************************/
 
 
@@ -1838,8 +1862,8 @@ namespace TVMS_API.Controllers
                 cn.Close();
                 if (a == "1")
                 {
-                  // mail(ClientLoginDet.LoginId);
-                  
+                    // mail(ClientLoginDet.LoginId);
+
                     /********************* mail code ******************************/
 
                     //byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(ClientLoginDet.LoginId);
@@ -1863,26 +1887,26 @@ namespace TVMS_API.Controllers
 
                     /*******************************************************************************/
                     //Commented on 9th jan 2020
-                 //   byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(ClientLoginDet.LoginId);
-                 //   string encodedMailId = System.Convert.ToBase64String(mybyte);
-                 //   MailMessage mm = new MailMessage();
-                 //   mm.To.Add(new MailAddress(ClientLoginDet.LoginId, "Request for Verification"));
-                 //   mm.From = new MailAddress("saurabhbansal2004@gmail.com");
-                 ////   mm.Body = "click here to verify http://217.117.3.12:8283/ClientHome.aspx?LoginId=" + encodedMailId;
-                 //   mm.IsBodyHtml = true;
-                 //   mm.Subject = "Verification";
-                 //   SmtpClient smcl = new SmtpClient();
-                 //   smcl.Host = "smtp.gmail.com";
-                 //   smcl.Port = 587;
-                 //   //smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
-                 //   smcl.Credentials = new NetworkCredential("tvms.donotreply@gmail.com", "$TMS@SB2019");
-                 //   smcl.EnableSsl = true;
-                 //   smcl.Send(mm);
+                    //   byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(ClientLoginDet.LoginId);
+                    //   string encodedMailId = System.Convert.ToBase64String(mybyte);
+                    //   MailMessage mm = new MailMessage();
+                    //   mm.To.Add(new MailAddress(ClientLoginDet.LoginId, "Request for Verification"));
+                    //   mm.From = new MailAddress("saurabhbansal2004@gmail.com");
+                    ////   mm.Body = "click here to verify http://217.117.3.12:8283/ClientHome.aspx?LoginId=" + encodedMailId;
+                    //   mm.IsBodyHtml = true;
+                    //   mm.Subject = "Verification";
+                    //   SmtpClient smcl = new SmtpClient();
+                    //   smcl.Host = "smtp.gmail.com";
+                    //   smcl.Port = 587;
+                    //   //smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
+                    //   smcl.Credentials = new NetworkCredential("tvms.donotreply@gmail.com", "$TMS@SB2019");
+                    //   smcl.EnableSsl = true;
+                    //   smcl.Send(mm);
                     /**************************************************************/
 
 
                     main_ret = main_ret + "{\"Result\":\"Success\", \"UserId\": \"" + UserId.Value.ToString() + "\"}";
-                   // main_ret = main_ret + "{\"Result\":\"Success\"}";
+                    // main_ret = main_ret + "{\"Result\":\"Success\"}";
                 }
                 else if (a == "2")
                     main_ret = main_ret + "{\"Result\":\"LoginId Already Exist\"}";
@@ -1902,7 +1926,7 @@ namespace TVMS_API.Controllers
                 main_ret = main_ret + "{\"Result\":\"Server Error\"}";
                 return JObject.Parse(main_ret);
 
-               // return JObject.Parse(@"{""Server Error""}");
+                // return JObject.Parse(@"{""Server Error""}");
             }
         }
 
@@ -1923,11 +1947,11 @@ namespace TVMS_API.Controllers
                 }
             }
 
-            if(table.Rows.Count>0)
+            if (table.Rows.Count > 0)
             {
-                    string x = Convert.ToString(JObject.Parse(@"{""FTPDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.Indented)) + "}"));
-                    x = x.Replace("[","").Replace("]","");
-                    return JObject.Parse(x);
+                string x = Convert.ToString(JObject.Parse(@"{""FTPDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.Indented)) + "}"));
+                x = x.Replace("[", "").Replace("]", "");
+                return JObject.Parse(x);
 
 
             }
@@ -1942,7 +1966,7 @@ namespace TVMS_API.Controllers
 
         [System.Web.Http.HttpGet]
         public JObject getClient_phoneNo_exist(string phno_email)
-        {   
+        {
             SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
 
             //changes on 9th jan 2020
@@ -1965,12 +1989,12 @@ namespace TVMS_API.Controllers
                 }
             }
 
-            if(table.Rows.Count>0)
+            if (table.Rows.Count > 0)
             {
                 return JObject.Parse(@"{""Status"" :{status:""Already Exist.""}}");
                 //  return (@"{LoginDetails : {Status:0}}");
             }
-             else
+            else
             {
                 return JObject.Parse(@"{""Status"" :{status:""Not Exist""}}");
                 //  return (@"{LoginDetails : {Status:0}}");
@@ -1983,16 +2007,16 @@ namespace TVMS_API.Controllers
         {
             u = u.Replace("'", "''");
             p = p.Replace("'", "''");
-            
+
             SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
 
             //changes on 9th jan 2020
             //SqlCommand cmd1 = new SqlCommand("select * FROM tblClientUserMaster where LoginId=@u and password=@p and Flag_email_verify='Y'", cn1);
 
             SqlCommand cmd1 = new SqlCommand("select * FROM tblClientUserMaster where LoginId=@u and password=@p", cn1);
-            
+
             cmd1.Parameters.AddWithValue("@u", u);
-           // cmd1.Parameters.AddWithValue("@p", AgentProfileController.EncryptString(p));
+            // cmd1.Parameters.AddWithValue("@p", AgentProfileController.EncryptString(p));
 
             cmd1.Parameters.AddWithValue("@p", p);
             cmd1.CommandType = CommandType.Text;
@@ -2012,9 +2036,9 @@ namespace TVMS_API.Controllers
                 }
             }
 
-            string password="";
-            if(table.Rows.Count>0)
-             password=AgentProfileController.DecryptString(table.Rows[0]["Password"].ToString());
+            string password = "";
+            if (table.Rows.Count > 0)
+                password = AgentProfileController.DecryptString(table.Rows[0]["Password"].ToString());
 
             byte[] imagem = new byte[0];
 
@@ -2024,7 +2048,7 @@ namespace TVMS_API.Controllers
                     imagem = (byte[])(table.Rows[0]["UserImage"]);
             }
 
-            if (table.Rows.Count > 0 && p==password)
+            if (table.Rows.Count > 0 && p == password)
             {
                 Clientlogin_det login = new Clientlogin_det
                 {
@@ -2037,8 +2061,8 @@ namespace TVMS_API.Controllers
                     Address = table.Rows[0]["Address"].ToString(),
                     Gender = table.Rows[0]["Gender"].ToString(),
 
-                   // DateOfBirth = table.Rows[0]["DOB"].ToString(),
-                   DateOfBirth=Convert.ToDateTime(table.Rows[0]["DOB"]).ToString("dd/MM/yyyy hh:mm:ss tt"),
+                    // DateOfBirth = table.Rows[0]["DOB"].ToString(),
+                    DateOfBirth = Convert.ToDateTime(table.Rows[0]["DOB"]).ToString("dd/MM/yyyy hh:mm:ss tt"),
                     DrivingLicNo = table.Rows[0]["DrivingLicNo"].ToString(),
                     ImagePath = imagem,
                     Email = table.Rows[0]["EmailId"].ToString(),
@@ -2064,7 +2088,7 @@ namespace TVMS_API.Controllers
         [System.Web.Http.HttpPost]
         public JObject Delete_Vehicle(Delete_Vehicle del_veh)
         {
-              string a;
+            string a;
             string main_ret = "";
             SqlConnection cn = new SqlConnection(db.Connection.ConnectionString.ToString());
 
@@ -2190,7 +2214,7 @@ namespace TVMS_API.Controllers
 
 
                 SqlParameter output = new SqlParameter("@SuccessID", SqlDbType.Int);
-                SqlParameter ReqId = new SqlParameter("@ReqId", SqlDbType.VarChar,200);
+                SqlParameter ReqId = new SqlParameter("@ReqId", SqlDbType.VarChar, 200);
 
                 output.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(output);
@@ -2228,7 +2252,7 @@ namespace TVMS_API.Controllers
         public JObject getSecurityCode(string ReqNo, string securityCode)
         {
             SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
-           
+
             DataTable table = new DataTable();
 
 
@@ -2245,17 +2269,17 @@ namespace TVMS_API.Controllers
             string main_ret = "";
             if (table.Rows.Count > 0)
             {
-                  main_ret = main_ret + "{\"Result\":\"Success\"}";
+                main_ret = main_ret + "{\"Result\":\"Success\"}";
 
 
-             
+
             }
             else
             {
-                  main_ret = main_ret + "{\"Result\":\"Failed\"}";
+                main_ret = main_ret + "{\"Result\":\"Failed\"}";
             }
 
-             return JObject.Parse(main_ret);
+            return JObject.Parse(main_ret);
         }
 
 
@@ -2268,9 +2292,9 @@ namespace TVMS_API.Controllers
 
 
             {
-               // using (SqlCommand cmd = new SqlCommand("SELECT dbo.tblServiceRequest.RequestId, dbo.tblDeviceDetails.Status, dbo.tblDeviceDetails.UpdatedOn FROM dbo.tblServiceRequest INNER JOIN dbo.tblDeviceDetails ON dbo.tblServiceRequest.DeviceId = dbo.tblDeviceDetails.DeviceId where RequestId='" + ReqNo + "' ORDER BY dbo.tblDeviceDetails.UpdatedOn desc", cn1))
+                // using (SqlCommand cmd = new SqlCommand("SELECT dbo.tblServiceRequest.RequestId, dbo.tblDeviceDetails.Status, dbo.tblDeviceDetails.UpdatedOn FROM dbo.tblServiceRequest INNER JOIN dbo.tblDeviceDetails ON dbo.tblServiceRequest.DeviceId = dbo.tblDeviceDetails.DeviceId where RequestId='" + ReqNo + "' ORDER BY dbo.tblDeviceDetails.UpdatedOn desc", cn1))
 
-                using (SqlCommand cmd = new SqlCommand("SELECT * from dbo.tblDeviceDetails where DeviceIMEI='"+IMEI_No+"'", cn1))
+                using (SqlCommand cmd = new SqlCommand("SELECT * from dbo.tblDeviceDetails where DeviceIMEI='" + IMEI_No + "'", cn1))
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
                     adapter.Fill(table);
@@ -2291,10 +2315,10 @@ namespace TVMS_API.Controllers
 
             else
             {
-                 main_ret = main_ret + "{\"Result\":\"Result Not Found\"}"; 
-                
+                main_ret = main_ret + "{\"Result\":\"Result Not Found\"}";
+
             }
-          
+
 
             return JObject.Parse(main_ret);
         }
@@ -2306,7 +2330,7 @@ namespace TVMS_API.Controllers
         public JObject getRegisteredVehicle(string u)
         {
             u = u.Replace("'", "''");
-           
+
             SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
             SqlCommand cmd1 = new SqlCommand("select * FROM tblVehicleDetails where UserId='" + u + "'", cn1);
             cmd1.CommandType = CommandType.Text;
@@ -2327,7 +2351,7 @@ namespace TVMS_API.Controllers
 
 
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[8] {new DataColumn("VehicleNo", typeof(string)),new DataColumn("ChesisNo", typeof(string)), new DataColumn("RegisteredName", typeof(string)), new DataColumn("RegisteredAddress", typeof(string)), new DataColumn("RegistrationDate", typeof(string)),  new DataColumn("Model", typeof(string)),  new DataColumn("Class", typeof(string)),                        
+            dt.Columns.AddRange(new DataColumn[8] {new DataColumn("VehicleNo", typeof(string)),new DataColumn("ChesisNo", typeof(string)), new DataColumn("RegisteredName", typeof(string)), new DataColumn("RegisteredAddress", typeof(string)), new DataColumn("RegistrationDate", typeof(string)),  new DataColumn("Model", typeof(string)),  new DataColumn("Class", typeof(string)),
                             new DataColumn("VehicleColor",typeof(string))});
 
 
@@ -2359,7 +2383,7 @@ namespace TVMS_API.Controllers
                 // return JObject.Parse(@"{""SearchDetails"" :" + Newtonsoft.Json.JsonConvert.SerializeObject(SearchViolationDetails) + "}");
                 return JObject.Parse(@"{""VehicleDetails"" :" + (JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.None)) + "}");
 
-              
+
 
             }
             else
@@ -2381,9 +2405,9 @@ namespace TVMS_API.Controllers
                 //ChesisNo = ChesisNo.Replace("'", "''");
                 VehicleNo = VehicleNo.Replace(",", "','");
                 SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
-               // SqlCommand cmd1 = new SqlCommand("select * FROM tblVehicleDetails where VehicleNo='" + VehicleNo + "'", cn1);
+                // SqlCommand cmd1 = new SqlCommand("select * FROM tblVehicleDetails where VehicleNo='" + VehicleNo + "'", cn1);
                 SqlCommand cmd1 = new SqlCommand("select * FROM tbl_Vehicle_Details_Artezia where VehicleNo in ('" + VehicleNo + "')", cn1);
-                
+
                 cmd1.CommandType = CommandType.Text;
                 //cmd1.ExecuteNonQuery();
 
@@ -2423,7 +2447,7 @@ namespace TVMS_API.Controllers
                 }
 
                 DataTable dt = new DataTable();
-                dt.Columns.AddRange(new DataColumn[10] {new DataColumn("VehicleNo", typeof(string)),new DataColumn("ChesisNo", typeof(string)), new DataColumn("RegisteredName", typeof(string)), new DataColumn("RegisteredAddress", typeof(string)), new DataColumn("RegistrationDate", typeof(string)),  new DataColumn("Model", typeof(string)),  new DataColumn("Class", typeof(string)),                        
+                dt.Columns.AddRange(new DataColumn[10] {new DataColumn("VehicleNo", typeof(string)),new DataColumn("ChesisNo", typeof(string)), new DataColumn("RegisteredName", typeof(string)), new DataColumn("RegisteredAddress", typeof(string)), new DataColumn("RegistrationDate", typeof(string)),  new DataColumn("Model", typeof(string)),  new DataColumn("Class", typeof(string)),
                             new DataColumn("VehicleColor",typeof(string)),new DataColumn("PhoneNumber",typeof(string)),new DataColumn("Make",typeof(string))});
 
 
@@ -2449,7 +2473,7 @@ namespace TVMS_API.Controllers
                     {
                         dt.Rows.Add(table.Rows[i]["VehicleNo"].ToString(), table.Rows[i]["ChesisNo"].ToString(), table.Rows[i]["RegisteredName"].ToString(), table.Rows[i]["RegisteredAddress"].ToString(), table.Rows[i]["RegistrationDate"].ToString(), table.Rows[i]["Model"].ToString(), table.Rows[i]["Class"].ToString(), table.Rows[i]["VehicleColor"].ToString(), table.Rows[i]["MobileNo"].ToString(), table.Rows[i]["Make"].ToString());
 
-                        
+
                         //dt.Rows.Add(table.Rows[i]["VehicleNo"].ToString(), table.Rows[i]["ChesisNo"].ToString(), table.Rows[i]["RegisteredName"].ToString(), table.Rows[i]["RegisteredAddress"].ToString(), table.Rows[i]["RegistrationDate"].ToString(), table.Rows[i]["Model"].ToString(), table.Rows[i]["Class"].ToString(), table.Rows[i]["VehicleColor"].ToString(), "07088080800", table.Rows[i]["Make"].ToString());
                     }
                     // StringBuilder x= new StringBuilder();
@@ -2470,7 +2494,7 @@ namespace TVMS_API.Controllers
             catch (Exception ex)
             {
                 return JObject.Parse(@"{""VehicleDetails"" :[]}");
-               // return JObject.Parse(@"{""Server Error""}");
+                // return JObject.Parse(@"{""Server Error""}");
             }
         }
 
@@ -2581,26 +2605,26 @@ namespace TVMS_API.Controllers
             //reqid = ticketNo
             //string url = "http://pg.nownowpay.ng/nownowpg/getKey";
             string url_api = "http://34.254.53.229:8080/nownowpg/getKey";
-            var res="";
+            var res = "";
             using (var client = new WebClient())
             {
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
-               
-               // string json = "{\n    \"deviceType\": \"Web\",\n    \"entitySubType\": \"2\",\n    \"amount\": \"" + amt + "\",\n    \"authToken\": \"" + token + "\",\n    \"authmodel\": \"VBVSECURECODE\",\n    \"channelId\": \"23\",\n    \"country\": \"NG\",\n    \"currency\": \"NGN\",\n    \"custid\": \"81000000177\",\n    \"entityId\": \"81000000177\",\n    \"entityType\": \"81\",\n    \"flag\": \"0\",\n    \"fromEntityId\": \"81000000177\",\n    \"mpin\": \"0f1eaedb30bfa62c3445edb6cdcc7ffe\",\n    \"msisdn\": \"9053810099\",\n    \"narration\": \"NESREA PG TEST\",\n    \"pin\": \"\",\n    \"requestId\":  \"" + req_id + "\",\n    \"surroundSystem\": \"1\",\n    \"timestamp\": \"1555494630\",\n    \"toEntityId\": \"81000000177\",\n    \"projectType\": \"NGECP\",\n    \"clientCallbackURL\": \"" + URL + "\"\n}";
+
+                // string json = "{\n    \"deviceType\": \"Web\",\n    \"entitySubType\": \"2\",\n    \"amount\": \"" + amt + "\",\n    \"authToken\": \"" + token + "\",\n    \"authmodel\": \"VBVSECURECODE\",\n    \"channelId\": \"23\",\n    \"country\": \"NG\",\n    \"currency\": \"NGN\",\n    \"custid\": \"81000000177\",\n    \"entityId\": \"81000000177\",\n    \"entityType\": \"81\",\n    \"flag\": \"0\",\n    \"fromEntityId\": \"81000000177\",\n    \"mpin\": \"0f1eaedb30bfa62c3445edb6cdcc7ffe\",\n    \"msisdn\": \"9053810099\",\n    \"narration\": \"NESREA PG TEST\",\n    \"pin\": \"\",\n    \"requestId\":  \"" + req_id + "\",\n    \"surroundSystem\": \"1\",\n    \"timestamp\": \"1555494630\",\n    \"toEntityId\": \"81000000177\",\n    \"projectType\": \"NGECP\",\n    \"clientCallbackURL\": \"" + URL + "\"\n}";
                 string json = "{\n    \"deviceType\": \"Web\",\n    \"entitySubType\": \"2\",\n    \"amount\": \"" + amt + "\",\n    \"authToken\": \"" + token + "\",\n    \"authmodel\": \"VBVSECURECODE\",\n    \"channelId\": \"23\",\n    \"country\": \"NG\",\n    \"currency\": \"NGN\",\n    \"custid\": \"" + req_id + "\",\n    \"entityId\": \"95000000001\",\n    \"entityType\": \"95\",\n    \"flag\": \"0\",\n    \"fromEntityId\": \"95000000001\",\n    \"mpin\": \"2735c056c095cf686aa0b592cd9fb7b8\",\n    \"msisdn\": \"7088080808\",\n    \"narration\": \"TVMS test\",\n    \"pin\": \"\",\n    \"requestId\":  \"" + req_id + "\",\n    \"surroundSystem\": \"1\",\n    \"timestamp\": \"1555494630\",\n    \"toEntityId\": \"95000000001\",\n    \"projectType\": \"TVMS\",\n    \"clientCallbackURL\": \"" + URL + "\"\n}";
                 res = client.UploadString(url_api, json);
-               
+
             }
 
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[1] { new DataColumn("key", typeof(string)) });
-           
-           // Uri a = new Uri("https://pg.nownowpay.ng/nownowpg/pay?resp=" + JObject.Parse(res)["key"].ToString());
+
+            // Uri a = new Uri("https://pg.nownowpay.ng/nownowpg/pay?resp=" + JObject.Parse(res)["key"].ToString());
             Uri a = new Uri("http://34.254.53.229:8080/nownowpg/pay?resp=" + JObject.Parse(res)["key"].ToString());
-           return a.OriginalString;
+            return a.OriginalString;
 
 
-           // return ("https://pg.nownowpay.ng/nownowpg/pay?resp=" + JObject.Parse(res)["key"].ToString());
+            // return ("https://pg.nownowpay.ng/nownowpg/pay?resp=" + JObject.Parse(res)["key"].ToString());
         }
 
         [System.Web.Http.HttpGet]
@@ -2625,11 +2649,11 @@ namespace TVMS_API.Controllers
             }
 
 
-          if(table.Rows.Count>0)
-          {
+            if (table.Rows.Count > 0)
+            {
                 string x = Convert.ToString(JObject.Parse(@"{""ServiceCenterDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.Indented)) + "}"));
 
-               
+
                 return JObject.Parse(@"{""ServiceCenterDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.None)) + "}");
 
 
@@ -2638,11 +2662,11 @@ namespace TVMS_API.Controllers
             else
             {
                 return JObject.Parse(@"{""ServiceCenterDetails"" :" + (JsonConvert.SerializeObject(table, Newtonsoft.Json.Formatting.None)) + "}");
-                
+
             }
         }
 
-      
+
 
         /************* Tolling Process ********************/
 
@@ -2700,7 +2724,7 @@ namespace TVMS_API.Controllers
         public JObject TollingUnpaidRecords(string Veh_Id)    /* Slot List */
         {
             Veh_Id = Veh_Id.Replace("'", "''");
-            
+
             SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
             DataTable table = new DataTable();
             {
@@ -2741,7 +2765,7 @@ namespace TVMS_API.Controllers
             }
         }
 
-         [System.Web.Http.HttpGet]
+        [System.Web.Http.HttpGet]
         public void mail(string mailid)
         {
 
@@ -2757,158 +2781,209 @@ namespace TVMS_API.Controllers
             SmtpClient smcl = new SmtpClient();
             smcl.Host = "smtp.gmail.com";
             smcl.Port = 587;
-            
-           // smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
+
+            // smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
             smcl.Credentials = new NetworkCredential("ajit.nair@cg-infotech.com", "ganpati@450");
 
-           // smcl.UseDefaultCredentials = false;
+            // smcl.UseDefaultCredentials = false;
             smcl.EnableSsl = true;
             smcl.SendMailAsync(mm);
-            
-        //    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-        ////    smtp.EnableSsl = true;
-        //    smtp.UseDefaultCredentials = false;
-        //    smtp.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
 
-        //    MailMessage msg = new MailMessage("zas.donotreply@gmail.com", "saurabhbansal2004@gmail.com");
-        //    msg.Subject = "hello";
-        //    msg.Body = "world";
+            //    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            ////    smtp.EnableSsl = true;
+            //    smtp.UseDefaultCredentials = false;
+            //    smtp.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
 
-        //    smtp.Send(msg);
+            //    MailMessage msg = new MailMessage("zas.donotreply@gmail.com", "saurabhbansal2004@gmail.com");
+            //    msg.Subject = "hello";
+            //    msg.Body = "world";
 
-           // return true;
+            //    smtp.Send(msg);
+
+            // return true;
         }
 
-         [System.Web.Http.HttpGet]
-         public JObject ClientPasswordmail(string mailid, string password, string FirstName)
-         {
-             string main_ret = "";
-             byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(mailid);
-             string encodedMailId = System.Convert.ToBase64String(mybyte);
+        [System.Web.Http.HttpGet]
+        public JObject ClientPasswordmail(string mailid, string password, string FirstName)
+        {
+            string main_ret = "";
+            byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(mailid);
+            string encodedMailId = System.Convert.ToBase64String(mybyte);
 
-             MailMessage mm = new MailMessage();
+            MailMessage mm = new MailMessage();
             // mm.To.Add(new MailAddress(mailid, "Request for Password Verification"));
-             mm.To.Add(new MailAddress(mailid, mailid.Split('@')[0].ToString()));
-             mm.From = new MailAddress("tmssupport@lagosstate.gov.ng", "tmssupport@lagosstate.gov.ng");
-             //  mm.Body = "click here to verify http://217.117.3.12:8283/ClientHome.aspx?LoginId=" + encodedMailId;
+            mm.To.Add(new MailAddress(mailid, mailid.Split('@')[0].ToString()));
+            mm.From = new MailAddress("tmssupport@lagosstate.gov.ng", "tmssupport@lagosstate.gov.ng");
+            //  mm.Body = "click here to verify http://217.117.3.12:8283/ClientHome.aspx?LoginId=" + encodedMailId;
 
             // mm.Body = "<span style='font-family:Georgia'><b><I> Dear " + FirstName + ",<br/><br/> Welcome to TMS.<br/<br/> <br/<br/> Kindly see your login details below: <br/><br/> UserName: " + mailid + " <br/> E-mail verification Password: " + password + " <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - support@tms.lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></b></span>";
 
-             mm.Body = "<span style='font-family:Georgia'><I> Dear " + FirstName + ",<br/><br/> Welcome to TMS.<br/<br/> <br/<br/> Kindly see your login details below: <br/><br/> <b>UserName:</b> " + mailid + " <br/> <b>E-mail verification Password:</b> " + password + " <br/><br/> <b>Note:</b> Please use this OTP for your first time log in after sign up. <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - tmssupport@lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></span>";
-             mm.IsBodyHtml = true;
-             mm.Subject = "E-Mail Verification Password";
-             SmtpClient smcl = new SmtpClient();
+            mm.Body = "<span style='font-family:Georgia'><I> Dear " + FirstName + ",<br/><br/> Welcome to TMS.<br/<br/> <br/<br/> Kindly see your login details below: <br/><br/> <b>UserName:</b> " + mailid + " <br/> <b>E-mail verification Password:</b> " + password + " <br/><br/> <b>Note:</b> Please use this OTP for your first time log in after sign up. <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - tmssupport@lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></span>";
+            mm.IsBodyHtml = true;
+            mm.Subject = "E-Mail Verification Password";
+            SmtpClient smcl = new SmtpClient();
 
 
-             smcl.Host = "smtp.gmail.com";
-             //smcl.Host = "mail.lagosstate.gov.ng";
+            smcl.Host = "smtp.gmail.com";
+            //smcl.Host = "mail.lagosstate.gov.ng";
             // smcl.Port = 25;  //587
-             smcl.Port = 587;  
-             smcl.Credentials = new NetworkCredential("tvms.donotreply@gmail.com", "$TMS@SB2019");
+            smcl.Port = 587;
+            smcl.Credentials = new NetworkCredential("tvms.donotreply@gmail.com", "$TMS@SB2019");
             // smcl.Credentials = new NetworkCredential("tms-noreply@lagosstate.gov.ng", "Artsolng");
-             // smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
-             //smcl.Credentials = new NetworkCredential("ajit.nair@cg-infotech.com", "ganpati@450");
+            // smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
+            //smcl.Credentials = new NetworkCredential("ajit.nair@cg-infotech.com", "ganpati@450");
 
-             // smcl.UseDefaultCredentials = false;
-             smcl.EnableSsl = false;
-             smcl.Send(mm);
+            // smcl.UseDefaultCredentials = false;
+            smcl.EnableSsl = false;
+            smcl.Send(mm);
 
-             main_ret = main_ret + "{\"Result\":\"Please check your mail for onetime password.\"}";
-             return JObject.Parse(main_ret);
-         }
-
-
-
-         [System.Web.Http.HttpGet]
-         public JObject ClientPassword_UpdateVerifymail(string mailid, string password, string FirstName, string flag_Email_Phone)
-         {
-             string main_ret = "";
-             byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(mailid);
-             string encodedMailId = System.Convert.ToBase64String(mybyte);
-             string qry = "";
-             DataTable table = new DataTable();
-             SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
-             if (flag_Email_Phone == "E")
-                 qry = "select * FROM tblClientUserMaster where EmailId='" + mailid + "'";
-             else
-                 qry = "select * FROM tblClientUserMaster where PhoneNumber='" + mailid + "'";
-
-             using (SqlCommand cmd = new SqlCommand(qry, cn1))
-
-             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-             {
-                 adapter.Fill(table);
-             }
-
-             if (table.Rows.Count > 0)
-             {
-                 if (flag_Email_Phone == "E")
-                 {
-                     main_ret = main_ret + "{\"Result\":\"Email already exists.\",\"Status\":0}";
-                 }
-                 else
-                 {
-                     main_ret = main_ret + "{\"Result\":\"Phone number already exists.\",\"Status\":0}";
-                 }
-                 return JObject.Parse(main_ret);
-             }
-
-             if (flag_Email_Phone == "E")
-             {
-                 MailMessage mm = new MailMessage();
-                 // mm.To.Add(new MailAddress(mailid, "Request for Password Verification"));
-                 mm.To.Add(new MailAddress(mailid, mailid.Split('@')[0].ToString()));
-                 mm.From = new MailAddress("tmssupport@lagosstate.gov.ng", "tmssupport@lagosstate.gov.ng");
-                 //  mm.Body = "click here to verify http://217.117.3.12:8283/ClientHome.aspx?LoginId=" + encodedMailId;
-
-                 // mm.Body = "<span style='font-family:Georgia'><b><I> Dear " + FirstName + ",<br/><br/> Welcome to TMS.<br/<br/> <br/<br/> Kindly see your login details below: <br/><br/> UserName: " + mailid + " <br/> E-mail verification Password: " + password + " <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - support@tms.lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></b></span>";
-
-                 mm.Body = "<span style='font-family:Georgia'><I> Dear " + FirstName + ",<br/><br/> <b>Your E-mail verification password is:</b> " + password + " <br/><br/> <b></b> Please use this OTP to complete your profile update. <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - tmssupport@lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></span>";
-                 mm.IsBodyHtml = true;
-                 mm.Subject = "E-Mail Verification Password";
-                 SmtpClient smcl = new SmtpClient();
+            main_ret = main_ret + "{\"Result\":\"Please check your mail for onetime password.\"}";
+            return JObject.Parse(main_ret);
+        }
 
 
-                 smcl.Host = "smtp.gmail.com";
-                 // smcl.Host = "smtp.mail.lagosstate.gov.ng/";
-                 // smcl.Port = 25;  //587
-                 smcl.Port = 587;
-                 smcl.Credentials = new NetworkCredential("tvms.donotreply@gmail.com", "$TMS@SB2019");
-                 // smcl.Credentials = new NetworkCredential("tms-noreply@lagosstate.gov.ng", "Artsolng");
 
-                 // smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
-                 //smcl.Credentials = new NetworkCredential("ajit.nair@cg-infotech.com", "ganpati@450");
+        [System.Web.Http.HttpGet]
+        public JObject ClientPassword_UpdateVerifymail(string mailid, string password, string FirstName, string flag_Email_Phone)
+        {
+            string main_ret = "";
+            byte[] mybyte = System.Text.Encoding.UTF8.GetBytes(mailid);
+            string encodedMailId = System.Convert.ToBase64String(mybyte);
+            string qry = "";
+            DataTable table = new DataTable();
+            SqlConnection cn1 = new SqlConnection(db.Connection.ConnectionString.ToString());
+            if (flag_Email_Phone == "E")
+                qry = "select * FROM tblClientUserMaster where EmailId='" + mailid + "'";
+            else
+                qry = "select * FROM tblClientUserMaster where PhoneNumber='" + mailid + "'";
 
-                 // smcl.UseDefaultCredentials = false;
-                 smcl.EnableSsl = true;
-                 smcl.Send(mm);
+            using (SqlCommand cmd = new SqlCommand(qry, cn1))
 
-                 //   main_ret = main_ret + "{\"Result\":\"Your One Time Passwords have been forwarded to your updated E-mail address and Phone Number.\",\"Status\":1}";
-                 main_ret = main_ret + "{\"Result\":\"Your One Time Password have been forwarded to your updated E-mail address.\",\"Status\":1}";
-                 return JObject.Parse(main_ret);
-             }
-             else
-             {
-                 main_ret = main_ret + "{\"Result\":\"Phone number not exists.\",\"Status\":1}";
-                 return JObject.Parse(main_ret);
-             }
-         }
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                adapter.Fill(table);
+            }
 
-         [System.Web.Http.HttpGet]
-         public JObject OTP_OnCall(string mobile_no, string OTP)    /* OTP CALL */
-         {
-             string url = "http://217.117.3.14/tmsotpcall/api/values/otpCall?mobile=" + mobile_no + "&pin=" + OTP;
-             string res;
-             using (var client = new WebClient())
-             {
-                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
+            if (table.Rows.Count > 0)
+            {
+                if (flag_Email_Phone == "E")
+                {
+                    main_ret = main_ret + "{\"Result\":\"Email already exists.\",\"Status\":0}";
+                }
+                else
+                {
+                    main_ret = main_ret + "{\"Result\":\"Phone number already exists.\",\"Status\":0}";
+                }
+                return JObject.Parse(main_ret);
+            }
 
-                 res = client.DownloadString(url);
+            if (flag_Email_Phone == "E")
+            {
+                MailMessage mm = new MailMessage();
+                // mm.To.Add(new MailAddress(mailid, "Request for Password Verification"));
+                mm.To.Add(new MailAddress(mailid, mailid.Split('@')[0].ToString()));
+                mm.From = new MailAddress("tmssupport@lagosstate.gov.ng", "tmssupport@lagosstate.gov.ng");
+                //  mm.Body = "click here to verify http://217.117.3.12:8283/ClientHome.aspx?LoginId=" + encodedMailId;
 
-             }
+                // mm.Body = "<span style='font-family:Georgia'><b><I> Dear " + FirstName + ",<br/><br/> Welcome to TMS.<br/<br/> <br/<br/> Kindly see your login details below: <br/><br/> UserName: " + mailid + " <br/> E-mail verification Password: " + password + " <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - support@tms.lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></b></span>";
 
-             return JObject.Parse(res);
-         }
+                mm.Body = "<span style='font-family:Georgia'><I> Dear " + FirstName + ",<br/><br/> <b>Your E-mail verification password is:</b> " + password + " <br/><br/> <b></b> Please use this OTP to complete your profile update. <br/><br/> For support and enquiries please call 07000-TRAFFIC or email - tmssupport@lagosstate.gov.ng <br/><br/> Best Regards, <br/> TMS Team </I></span>";
+                mm.IsBodyHtml = true;
+                mm.Subject = "E-Mail Verification Password";
+                SmtpClient smcl = new SmtpClient();
+
+
+                smcl.Host = "smtp.gmail.com";
+                // smcl.Host = "smtp.mail.lagosstate.gov.ng/";
+                // smcl.Port = 25;  //587
+                smcl.Port = 587;
+                smcl.Credentials = new NetworkCredential("tvms.donotreply@gmail.com", "$TMS@SB2019");
+                // smcl.Credentials = new NetworkCredential("tms-noreply@lagosstate.gov.ng", "Artsolng");
+
+                // smcl.Credentials = new NetworkCredential("zas.donotreply@gmail.com", "$$test1234$$");
+                //smcl.Credentials = new NetworkCredential("ajit.nair@cg-infotech.com", "ganpati@450");
+
+                // smcl.UseDefaultCredentials = false;
+                smcl.EnableSsl = true;
+                smcl.Send(mm);
+
+                //   main_ret = main_ret + "{\"Result\":\"Your One Time Passwords have been forwarded to your updated E-mail address and Phone Number.\",\"Status\":1}";
+                main_ret = main_ret + "{\"Result\":\"Your One Time Password have been forwarded to your updated E-mail address.\",\"Status\":1}";
+                return JObject.Parse(main_ret);
+            }
+            else
+            {
+                main_ret = main_ret + "{\"Result\":\"Phone number not exists.\",\"Status\":1}";
+                return JObject.Parse(main_ret);
+            }
+        }
+
+        [System.Web.Http.HttpGet]
+        public JObject OTP_OnCall(string mobile_no, string OTP)    /* OTP CALL */
+        {
+            string url = "http://217.117.3.14/tmsotpcall/api/values/otpCall?mobile=" + mobile_no + "&pin=" + OTP;
+            string res;
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+
+                res = client.DownloadString(url);
+
+            }
+
+            return JObject.Parse(res);
+        }
+
+        //Added by Aditya Narayan Singh for insert_voilation_details_App controller on 29th Jan 2024
+        [System.Web.Http.HttpPost]
+        public JObject insert_voilation_details_App([FromBody] violation_det_App violationdetapp)
+        {
+            string a;
+            string main_ret = "";
+            SqlConnection cn = new SqlConnection(db.Connection.ConnectionString.ToString());
+            try
+            {
+                SqlCommand cmd = new SqlCommand("ADM_INS_VoilationDetails_App", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserId", violationdetapp.UserId);
+                cmd.Parameters.AddWithValue("@deviceIMEI", violationdetapp.deviceIMEI);
+                cmd.Parameters.AddWithValue("@videoFilename", violationdetapp.videoFilename);
+                cmd.Parameters.AddWithValue("@picturesFilenames", violationdetapp.picturesFilenames);
+                cmd.Parameters.AddWithValue("@latitude", violationdetapp.latitude);
+                cmd.Parameters.AddWithValue("@longitude", violationdetapp.longitude);
+                cmd.Parameters.AddWithValue("@locationname", violationdetapp.locationname);
+                cmd.Parameters.AddWithValue("@vdo_datetime", violationdetapp.vdo_datetime);
+                cmd.Parameters.AddWithValue("@OffenceId", violationdetapp.OffenceId);
+                cmd.Parameters.AddWithValue("@VehicleNumber", violationdetapp.VehicleNumber);
+                cmd.Parameters.AddWithValue("@TotalPenalty", violationdetapp.TotalPenalty);
+                cmd.Parameters.AddWithValue("@TicketNumber", violationdetapp.TicketNumber);
+                cmd.Parameters.AddWithValue("@notifiedby", violationdetapp.notifiedby);
+                cmd.Parameters.AddWithValue("@PrintedTicketNo", violationdetapp.PrintedTicketNo);
+                cmd.Parameters.AddWithValue("@PaymentRefNo", violationdetapp.PaymentRefNo);
+                cmd.Parameters.AddWithValue("@NotifiedLocation", violationdetapp.NotifiedLocation);
+                cmd.Parameters.AddWithValue("@PenalityPoints", violationdetapp.PenalityPoints);
+                SqlParameter output = new SqlParameter("@SuccessID", SqlDbType.Int);
+                output.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(output);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                a = output.Value.ToString();
+                cn.Close();
+                if (a == "1")
+                {
+                    main_ret = main_ret + "{\"Result\":\"Success\"}";
+                }
+                else
+                    main_ret = main_ret + "{\"Result\":\"Failed\"}";
+                return JObject.Parse(main_ret);
+            }
+            catch (Exception ex)
+            {
+                cn.Close();
+                return JObject.Parse(@"{""Server Error""}");
+            }
+        }
+        //Changes end here
 
     }
 }
